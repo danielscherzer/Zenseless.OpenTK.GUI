@@ -4,6 +4,9 @@ using System;
 
 namespace Zenseless.OpenTK.GUI;
 
+/// <summary>
+/// Helper functions for using ImGui with OpenTK
+/// </summary>
 public class ImGuiHelper
 {
 	internal static void AssureContextCreated()
@@ -16,39 +19,59 @@ public class ImGuiHelper
 		}
 	}
 
-	public static void VecSlider(string label, ref Vector3 v)
+	/// <summary>
+	/// Create a SliderFloat3 with <see cref="Vector3"/> input.
+	/// </summary>
+	/// <param name="label">The label of the slider</param>
+	/// <param name="value">The <see cref="Vector3"/> value to edit.</param>
+	public static void SliderFloat(string label, ref Vector3 value)
 	{
-		System.Numerics.Vector3 sysV = v.ToSystemNumerics();
+		System.Numerics.Vector3 sysV = value.ToSystemNumerics();
 		if (ImGui.SliderFloat3(label, ref sysV, -1f, 1f))
 		{
-			v = sysV.ToOpenTK();
+			value = sysV.ToOpenTK();
 		}
 	}
-	
-	public static void VecSlider(string label, ref Vector4 v)
+
+	/// <summary>
+	/// Create a SliderFloat4 with <see cref="Vector4"/> input.
+	/// </summary>
+	/// <param name="label">The label of the slider</param>
+	/// <param name="value">The <see cref="Vector4"/> value to edit.</param>
+	public static void SliderFloat(string label, ref Vector4 value)
 	{
-		System.Numerics.Vector4 sysV = v.ToSystemNumerics();
+		System.Numerics.Vector4 sysV = value.ToSystemNumerics();
 		if (ImGui.SliderFloat4(label, ref sysV, -1f, 1f))
 		{
-			v = sysV.ToOpenTK();
+			value = sysV.ToOpenTK();
 		}
 	}
 
-	public static void ColorEdit(string label, ref Vector3 color)
+	/// <summary>
+	/// Create a ColorEdit3 with <see cref="Vector3"/> input.
+	/// </summary>
+	/// <param name="label">The label of the slider</param>
+	/// <param name="value">The <see cref="Vector3"/> value to edit.</param>
+	public static void ColorEdit(string label, ref Vector3 value)
 	{
-		System.Numerics.Vector3 sysColor = color.ToSystemNumerics();
+		System.Numerics.Vector3 sysColor = value.ToSystemNumerics();
 		if (ImGui.ColorEdit3(label, ref sysColor))
 		{
-			color = sysColor.ToOpenTK();
+			value = sysColor.ToOpenTK();
 		}
 	}
 
-	public static void ColorEdit(string label, ref Vector4 color)
+	/// <summary>
+	/// Create a ColorEdit4 with <see cref="Vector4"/> input.
+	/// </summary>
+	/// <param name="label">The label of the slider</param>
+	/// <param name="value">The <see cref="Vector4"/> value to edit.</param>
+	public static void ColorEdit(string label, ref Vector4 value)
 	{
-		System.Numerics.Vector4 sysColor = color.ToSystemNumerics();
+		System.Numerics.Vector4 sysColor = value.ToSystemNumerics();
 		if (ImGui.ColorEdit4(label, ref sysColor))
 		{
-			color = sysColor.ToOpenTK();
+			value = sysColor.ToOpenTK();
 		}
 	}
 }

@@ -29,9 +29,9 @@ window.RenderFrame += args =>
 	ImGui.SliderFloat("Font scale", ref io.FontGlobalScale, 0.5f, 4f, "%.1f");
 	ImGui.InputText("text", ref input, 255);
 	ImGuiHelper.ColorEdit(nameof(color3), ref color3);
-	ImGuiHelper.VecSlider(nameof(color3), ref color3);
+	ImGuiHelper.SliderFloat(nameof(color3), ref color3);
 	ImGuiHelper.ColorEdit(nameof(color4), ref color4);
-	ImGuiHelper.VecSlider(nameof(color4), ref color4);
+	ImGuiHelper.SliderFloat(nameof(color4), ref color4);
 	for (int i = 0; i < 10; ++i) ImGui.Button("testbutton" + i);
 
 	ImGui.ShowDemoWindow();

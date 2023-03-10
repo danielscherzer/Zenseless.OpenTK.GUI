@@ -11,7 +11,11 @@ namespace Zenseless.OpenTK.GUI;
 /// </summary>
 public class ImGuiInput
 {
-	public ImGuiInput(GameWindow window)
+	/// <summary>
+	/// Create a new instance
+	/// </summary>
+	/// <param name="window">A <see cref="NativeWindow"/> for connecting input event handler.</param>
+	public ImGuiInput(NativeWindow window)
 	{
 		ImGuiHelper.AssureContextCreated();
 
@@ -41,6 +45,12 @@ public class ImGuiInput
 		window.TextInput += args => PressChar((char)args.Unicode);
 	}
 
+	/// <summary>
+	/// Update the ImGui input state
+	/// </summary>
+	/// <param name="mouseState">The <see cref="MouseState"/>.</param>
+	/// <param name="keyboardState">The <see cref="KeyboardState"/>.</param>
+	/// <param name="deltaTime">Delta time in seconds.</param>
 	public void Update(MouseState mouseState, KeyboardState keyboardState, float deltaTime)
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
