@@ -1,4 +1,6 @@
-ImGui for OpenTK
+# ImGui for OpenTK
+[![Build status](https://ci.appveyor.com/api/projects/status/usuak3awe9kx495u?svg=true)](https://ci.appveyor.com/project/danielscherzer/zenseless-opentk-gui)
+[![NuGet](https://img.shields.io/nuget/v/Zenseless.OpenTK.GUI.svg)](https://www.nuget.org/packages/Zenseless.ContentPipeline/)
 
 See the [change log](CHANGELOG.md) for changes, features and road map.
 
