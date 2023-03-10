@@ -5,12 +5,15 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Zenseless.OpenTK.GUI;
+using Zenseless.Resources;
 
 GameWindow window = new(GameWindowSettings.Default, NativeWindowSettings.Default);
 window.WindowState = WindowState.Maximized;
 
 ImGuiInput imGuiInput = new(window);
 using ImGuiRenderer gui = new();
+
+gui.SetFont(new ShortestMatchResourceDirectory(new EmbeddedResourceDirectory()).Resource("DroidSans.ttf").AsByteArray());
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 window.UpdateFrame += args => imGuiInput.Update(window.MouseState, window.KeyboardState, (float)args.Time);

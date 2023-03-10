@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Zenseless.OpenTK.GUI;
 
@@ -25,6 +26,18 @@ public class ImGuiRenderer : IDisposable
 		io.DisplayFramebufferScale = System.Numerics.Vector2.One;
 
 		CreateDeviceResources();
+	}
+
+	public void SetFont(byte[] font)
+	{
+		var fonts = ImGui.GetIO().Fonts;
+		fonts.Clear();
+		GCHandle pinnedArray = GCHandle.Alloc(font, GCHandleType.Pinned);
+		IntPtr pointer = pinnedArray.AddrOfPinnedObject();
+		fonts.AddFontFromMemoryTTF(pointer, font.Length, 32);
+		pinnedArray.Free();
+		RecreateFontDeviceTexture();
+		//ImGui.PushFont(fnt); // call only after ImGui.NewFrame()
 	}
 
 	/// <summary>
@@ -187,6 +200,7 @@ void main()
 
 		int mips = (int)Math.Floor(Math.Log(Math.Max(width, height), 2));
 
+		if (0 != _fontTexture) GL.DeleteTexture(_fontTexture);
 		_fontTexture = GL.GenTexture();
 		GL.ActiveTexture(TextureUnit.Texture0);
 		GL.BindTexture(TextureTarget.Texture2D, _fontTexture);
