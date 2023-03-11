@@ -13,7 +13,7 @@ window.WindowState = WindowState.Maximized;
 ImGuiInput imGuiInput = new(window);
 using ImGuiRenderer gui = new();
 
-gui.SetFont(new ShortestMatchResourceDirectory(new EmbeddedResourceDirectory()).Resource("DroidSans.ttf").AsByteArray());
+gui.SetFontTTF(new ShortestMatchResourceDirectory(new EmbeddedResourceDirectory()).Resource("DroidSans.ttf").AsByteArray(), 24);
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 window.UpdateFrame += args => imGuiInput.Update(window.MouseState, window.KeyboardState, (float)args.Time);
@@ -38,6 +38,10 @@ window.RenderFrame += args =>
 	for (int i = 0; i < 10; ++i) ImGui.Button("testbutton" + i);
 
 	ImGui.ShowDemoWindow();
+
+	ImGui.Begin("Style");
+	ImGui.ShowStyleEditor();
+	ImGui.End();
 
 	gui.Render();
 	window.SwapBuffers();

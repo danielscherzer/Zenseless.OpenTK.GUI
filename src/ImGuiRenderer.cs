@@ -28,13 +28,18 @@ public class ImGuiRenderer : IDisposable
 		CreateDeviceResources();
 	}
 
-	public void SetFont(byte[] font)
+	/// <summary>
+	/// Se a new TTF font for rendering the GUI
+	/// </summary>
+	/// <param name="fontData">TTF file read into a byte array</param>
+	/// <param name="sizePixels">Intented size in pixels. Bigger means bigger texture is created.</param>
+	public void SetFontTTF(byte[] fontData, float sizePixels)
 	{
 		var fonts = ImGui.GetIO().Fonts;
-		fonts.Clear();
-		GCHandle pinnedArray = GCHandle.Alloc(font, GCHandleType.Pinned);
+		fonts.Clear(); // replace existing fonts
+		GCHandle pinnedArray = GCHandle.Alloc(fontData, GCHandleType.Pinned);
 		IntPtr pointer = pinnedArray.AddrOfPinnedObject();
-		fonts.AddFontFromMemoryTTF(pointer, font.Length, 32);
+		fonts.AddFontFromMemoryTTF(pointer, fontData.Length, sizePixels);
 		pinnedArray.Free();
 		RecreateFontDeviceTexture();
 		//ImGui.PushFont(fnt); // call only after ImGui.NewFrame()
