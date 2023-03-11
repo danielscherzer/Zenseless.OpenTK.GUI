@@ -70,23 +70,24 @@ public class ImGuiRenderer : IDisposable
 	/// </summary>
 	public void Dispose()
 	{
-		GL.DeleteVertexArray(_vertexArray);
+		vertexArray.Dispose();
 		GL.DeleteBuffer(_vertexBuffer);
 		GL.DeleteBuffer(_indexBuffer);
 
-		GL.DeleteTexture(_fontTexture);
+		fontTexture.Dispose();
 		GL.DeleteProgram(_shader);
 		GC.SuppressFinalize(this);
 	}
 
-	private int _fontTexture;
+	Texture2D fontTexture;
+
 	private int _shader;
 	private int _shaderFontTextureLocation;
 	private int _shaderProjectionMatrixLocation;
 
+	readonly VertexArray vertexArray = new();
 	private int _indexBuffer;
 	private int _indexBufferSize;
-	private int _vertexArray;
 	private int _vertexBuffer;
 	private int _vertexBufferSize;
 
@@ -137,11 +138,14 @@ public class ImGuiRenderer : IDisposable
 
 	private void CreateDeviceResources()
 	{
+		CreateShader();
+
+		RecreateFontDeviceTexture();
+
 		_vertexBufferSize = 10000;
 		_indexBufferSize = 2000;
 
-		_vertexArray = GL.GenVertexArray();
-		GL.BindVertexArray(_vertexArray);
+		vertexArray.Bind();
 
 		_vertexBuffer = GL.GenBuffer();
 		GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBuffer);
@@ -151,8 +155,25 @@ public class ImGuiRenderer : IDisposable
 		GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBuffer);
 		GL.BufferData(BufferTarget.ElementArrayBuffer, _indexBufferSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
 
-		RecreateFontDeviceTexture();
+		void SetAttribute(int index, int size, VertexAttribType type, int relativeoffset, bool normalized = false)
+		{
+			int stride = Unsafe.SizeOf<ImDrawVert>();
+			GL.VertexArrayVertexBuffer(vertexArray.Handle, index, _vertexBuffer, new IntPtr(0), stride);
+			GL.VertexArrayAttribBinding(vertexArray.Handle, index, index);
+			GL.VertexArrayAttribFormat(vertexArray.Handle, index, size, type, normalized, relativeoffset);
+			GL.EnableVertexArrayAttrib(vertexArray.Handle, index);
+		}
+		SetAttribute(0, 2, VertexAttribType.Float, 0);
+		SetAttribute(1, 2, VertexAttribType.Float, 8);
+		SetAttribute(2, 4, VertexAttribType.UnsignedByte, 16, true);
 
+		GL.BindVertexArray(0);
+		GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+		GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+	}
+
+	private void CreateShader()
+	{
 		string VertexSource = @"#version 330 core
 
 uniform mat4 projection_matrix;
@@ -187,15 +208,6 @@ void main()
 		_shader = CreateProgram("ImGui", VertexSource, FragmentSource);
 		_shaderProjectionMatrixLocation = GL.GetUniformLocation(_shader, "projection_matrix");
 		_shaderFontTextureLocation = GL.GetUniformLocation(_shader, "in_fontTexture");
-
-		int stride = Unsafe.SizeOf<ImDrawVert>();
-		GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, stride, 0);
-		GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, stride, 8);
-		GL.VertexAttribPointer(2, 4, VertexAttribPointerType.UnsignedByte, true, stride, 16);
-
-		GL.EnableVertexAttribArray(0);
-		GL.EnableVertexAttribArray(1);
-		GL.EnableVertexAttribArray(2);
 	}
 
 	private void RecreateFontDeviceTexture()
@@ -203,28 +215,11 @@ void main()
 		ImGuiIOPtr io = ImGui.GetIO();
 		io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out int width, out int height, out _);
 
-		int mips = (int)Math.Floor(Math.Log(Math.Max(width, height), 2));
+		fontTexture?.Dispose();
+		fontTexture = new(width, height, SizedInternalFormat.Rgba8, 1) { Function = TextureFunction.Repeat, MinFilter = TextureMinFilter.Linear, MagFilter = TextureMagFilter.Linear };
+		GL.TextureSubImage2D(fontTexture.Handle, 0, 0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, pixels);
 
-		if (0 != _fontTexture) GL.DeleteTexture(_fontTexture);
-		_fontTexture = GL.GenTexture();
-		GL.ActiveTexture(TextureUnit.Texture0);
-		GL.BindTexture(TextureTarget.Texture2D, _fontTexture);
-		GL.TexStorage2D(TextureTarget2d.Texture2D, mips, SizedInternalFormat.Rgba8, width, height);
-
-		GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, width, height, PixelFormat.Bgra, PixelType.UnsignedByte, pixels);
-
-		GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-
-		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-
-		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, mips - 1);
-
-		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-
-		io.Fonts.SetTexID((IntPtr)_fontTexture);
-
+		io.Fonts.SetTexID((IntPtr)fontTexture.Handle.Id);
 		io.Fonts.ClearTexData();
 	}
 
@@ -232,9 +227,8 @@ void main()
 	{
 		if (0 == draw_data.CmdListsCount) return;
 
-		// Bind the element buffer (thru the VAO) so that we can resize it.
-		GL.BindVertexArray(_vertexArray);
-		// Bind the vertex buffer so that we can resize it.
+		vertexArray.Bind();
+		GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBuffer);
 		GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBuffer);
 		for (int i = 0; i < draw_data.CmdListsCount; i++)
 		{
@@ -263,15 +257,12 @@ void main()
 		// Setup orthographic projection matrix into our constant buffer
 		ImGuiIOPtr io = ImGui.GetIO();
 		Matrix4 mvp = Matrix4.CreateOrthographicOffCenter(0.0f, io.DisplaySize.X, io.DisplaySize.Y, 0.0f, -1.0f, 1.0f);
-
-		GL.UseProgram(_shader);
-		GL.UniformMatrix4(_shaderProjectionMatrixLocation, false, ref mvp);
-		GL.Uniform1(_shaderFontTextureLocation, 0);
-
-		GL.BindVertexArray(_vertexArray);
+		GL.ProgramUniformMatrix4(_shader, _shaderProjectionMatrixLocation, false, ref mvp);
+		GL.ProgramUniform1(_shader, _shaderFontTextureLocation, 0);
 
 		draw_data.ScaleClipRects(io.DisplayFramebufferScale);
 
+		GL.UseProgram(_shader);
 		GL.Enable(EnableCap.Blend);
 		GL.Enable(EnableCap.ScissorTest);
 		GL.BlendEquation(BlendEquationMode.FuncAdd);
@@ -295,8 +286,7 @@ void main()
 				}
 				else
 				{
-					GL.ActiveTexture(TextureUnit.Texture0);
-					GL.BindTexture(TextureTarget.Texture2D, (int)pcmd.TextureId);
+					GL.BindTextureUnit(0, (int)pcmd.TextureId);
 
 					// We do _windowHeight - (int)clip.W instead of (int)clip.Y because gl has flipped Y when it comes to these coordinates
 					var clip = pcmd.ClipRect;
@@ -313,6 +303,11 @@ void main()
 				}
 			}
 		}
+		GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+		GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+		GL.UseProgram(0);
+		GL.BindTextureUnit(0, 0);
+		GL.BindVertexArray(0);
 		GL.Disable(EnableCap.Blend);
 		GL.Disable(EnableCap.ScissorTest);
 	}
