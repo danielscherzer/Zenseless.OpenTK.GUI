@@ -5,7 +5,6 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using System;
 using Zenseless.OpenTK.GUI;
 using Zenseless.Resources;
 
@@ -19,7 +18,6 @@ using ImGuiRenderer gui = new();
 gui.SetFontTTF(new ShortestMatchResourceDirectory(new EmbeddedResourceDirectory()).Resource("DroidSans.ttf").AsByteArray(), 24);
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
-window.UpdateFrame += args => imGuiInput.Update(window.MouseState, window.KeyboardState, (float)args.Time);
 
 string input = "hallo";
 Vector3 color3 = new(1f, 1f, 1f);
@@ -58,6 +56,6 @@ window.RenderFrame += args =>
 };
 window.RenderFrame += _ => window.SwapBuffers();
 window.Resize += (window) => GL.Viewport(0, 0, window.Width, window.Height);
-window.Resize += (window) => ImGuiRenderer.WindowResized(window.Width, window.Height);
+window.Resize += (window) => ImGuiRenderer.SetWindowSize(window.Width, window.Height);
 
 window.Run();

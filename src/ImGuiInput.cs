@@ -14,8 +14,8 @@ public class ImGuiInput
 	/// <summary>
 	/// Create a new instance
 	/// </summary>
-	/// <param name="window">A <see cref="NativeWindow"/> for connecting input event handler.</param>
-	public ImGuiInput(NativeWindow window)
+	/// <param name="window">A <see cref="GameWindow"/> for connecting input and update event handler.</param>
+	public ImGuiInput(GameWindow window)
 	{
 		ImGuiHelper.AssureContextCreated();
 
@@ -43,6 +43,7 @@ public class ImGuiInput
 		io.DeltaTime = 1f / 60f;
 
 		window.TextInput += args => PressChar((char)args.Unicode);
+		window.UpdateFrame += args => Update(window.MouseState, window.KeyboardState, (float)args.Time);
 	}
 
 	/// <summary>
@@ -51,7 +52,7 @@ public class ImGuiInput
 	/// <param name="mouseState">The <see cref="MouseState"/>.</param>
 	/// <param name="keyboardState">The <see cref="KeyboardState"/>.</param>
 	/// <param name="deltaTime">Delta time in seconds.</param>
-	public void Update(MouseState mouseState, KeyboardState keyboardState, float deltaTime)
+	private void Update(MouseState mouseState, KeyboardState keyboardState, float deltaTime)
 	{
 		ImGuiIOPtr io = ImGui.GetIO();
 		io.DeltaTime = deltaTime;

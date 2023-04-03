@@ -21,6 +21,7 @@ public class ImGuiRenderer : IDisposable
 		ImGuiHelper.AssureContextCreated();
 
 		var io = ImGui.GetIO();
+		io.DisplaySize = System.Numerics.Vector2.Zero;
 		io.Fonts.AddFontDefault();
 		io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 		io.DisplayFramebufferScale = System.Numerics.Vector2.One;
@@ -50,8 +51,9 @@ public class ImGuiRenderer : IDisposable
 	/// </summary>
 	/// <param name="width"></param>
 	/// <param name="height"></param>
-	public static void WindowResized(int width, int height)
+	public static void SetWindowSize(int width, int height)
 	{
+		ImGuiHelper.AssureContextCreated();
 		ImGuiIOPtr io = ImGui.GetIO();
 		io.DisplaySize = new System.Numerics.Vector2(width, height); // divide by DisplayFramebufferScale if necessary
 	}
@@ -61,6 +63,7 @@ public class ImGuiRenderer : IDisposable
 	/// </summary>
 	public void Render()
 	{
+		if (System.Numerics.Vector2.Zero == ImGui.GetIO().DisplaySize) throw new ApplicationException($"{nameof(ImGuiRenderer)} needs window size set (use {nameof(ImGuiRenderer)}.{nameof(SetWindowSize)})");
 		ImGui.Render();
 		RenderImDrawData(ImGui.GetDrawData());
 	}
