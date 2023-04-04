@@ -52,10 +52,9 @@ window.RenderFrame += args =>
 	ImGui.ShowStyleEditor();
 	ImGui.End();
 
-	gui.Render();
+	gui.Render(window.Size);
 };
 window.RenderFrame += _ => window.SwapBuffers();
 window.Resize += (window) => GL.Viewport(0, 0, window.Width, window.Height);
-window.Resize += (window) => ImGuiRenderer.SetWindowSize(window.Width, window.Height);
 
 window.Run();

@@ -48,23 +48,12 @@ public class ImGuiRenderer : IDisposable
 	}
 
 	/// <summary>
-	/// Call after each window resize to update window width and height
-	/// </summary>
-	/// <param name="width"></param>
-	/// <param name="height"></param>
-	public static void SetWindowSize(int width, int height)
-	{
-		ImGuiHelper.AssureContextCreated();
-		ImGuiIOPtr io = ImGui.GetIO();
-		io.DisplaySize = new System.Numerics.Vector2(width, height); // divide by DisplayFramebufferScale if necessary
-	}
-
-	/// <summary>
 	/// Render the user interface
 	/// </summary>
-	public void Render()
+	/// <param name="windowResolution">Window resolution in pixels.</param>
+	public void Render(Vector2i windowResolution)
 	{
-		if (System.Numerics.Vector2.Zero == ImGui.GetIO().DisplaySize) throw new ApplicationException($"{nameof(ImGuiRenderer)} needs window size set (use {nameof(ImGuiRenderer)}.{nameof(SetWindowSize)})");
+		ImGui.GetIO().DisplaySize = new System.Numerics.Vector2(windowResolution.X, windowResolution.Y); // divide by DisplayFramebufferScale if necessary
 		ImGui.Render();
 		RenderImDrawData(ImGui.GetDrawData());
 	}
