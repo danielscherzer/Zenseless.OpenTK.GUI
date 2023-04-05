@@ -9,13 +9,9 @@ using Zenseless.OpenTK.GUI;
 using Zenseless.Resources;
 
 GameWindow window = new(GameWindowSettings.Default, new NativeWindowSettings { Profile = ContextProfile.Compatability });
-//GameWindow window = new(GameWindowSettings.Default, NativeWindowSettings.Default);
-window.WindowState = WindowState.Maximized;
 
-ImGuiInput imGuiInput = new(window);
-using ImGuiRenderer gui = new();
-
-gui.SetFontTTF(new ShortestMatchResourceDirectory(new EmbeddedResourceDirectory()).Resource("DroidSans.ttf").AsByteArray(), 24);
+using ImGuiFacade gui = new(window);
+gui.SetFontTTF(new ShortestMatchResourceDirectory(new EmbeddedResourceDirectory()).Resource("DroidSans.ttf").AsByteArray(), 18);
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 
