@@ -4,18 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <RootNamespace>Example</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="assets\*.*" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\src\Zenseless.OpenTK.GUI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Zenseless.Resources" Version="0.2.14" />
   </ItemGroup>
 
 </Project>

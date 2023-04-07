@@ -11,7 +11,7 @@ using Zenseless.Resources;
 GameWindow window = new(GameWindowSettings.Default, new NativeWindowSettings { Profile = ContextProfile.Compatability });
 
 using ImGuiFacade gui = new(window);
-gui.SetFontTTF(new ShortestMatchResourceDirectory(new EmbeddedResourceDirectory()).Resource("DroidSans.ttf").AsByteArray(), 18);
+gui.LoadFontDroidSans(24);
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 

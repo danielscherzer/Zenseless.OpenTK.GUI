@@ -31,11 +31,11 @@ public class ImGuiRenderer : IDisposable
 	}
 
 	/// <summary>
-	/// Se a new TTF font for rendering the GUI
+	/// Load a TTF font and use it for rendering the GUI
 	/// </summary>
 	/// <param name="fontData">TTF file read into a byte array</param>
 	/// <param name="sizePixels">Intented size in pixels. Bigger means bigger texture is created.</param>
-	public void SetFontTTF(byte[] fontData, float sizePixels)
+	public void LoadFontTTF(byte[] fontData, float sizePixels)
 	{
 		var fonts = ImGui.GetIO().Fonts;
 		fonts.Clear(); // replace existing fonts

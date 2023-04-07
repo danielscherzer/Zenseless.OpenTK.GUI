@@ -1,0 +1,3 @@
+﻿Droid Sans is a humanist sans serif typeface designed by Steve Matteson, Type Director of Ascender Corp. Droid Sans was designed with an upright stress, open forms and a neutral, yet friendly appearance. Droid Sans was optimized for user interfaces and to be comfortable for reading on a mobile handset in menus, web browser and other screen text.
+
+Licenced under Apache 2 licence: https://www.apache.org/licenses/LICENSE-2.0

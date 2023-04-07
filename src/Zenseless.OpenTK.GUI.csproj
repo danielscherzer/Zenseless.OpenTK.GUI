@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
+    <RootNamespace>Zenseless.OpenTK.GUI</RootNamespace>
     <Nullable>enable</Nullable>
     <PublishDocumentationFile>true</PublishDocumentationFile>
     <DocumentationFile>bin/Zenseless.OpenTK.GUI.xml</DocumentationFile>
@@ -31,13 +32,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="assets\*.*" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Zenseless.OpenTK" Version="0.1.66" />
+    <PackageReference Include="Zenseless.Resources" Version="0.2.14" />
+    <PackageReference Include="ImGui.NET" Version="1.89.4" />
+  </ItemGroup>
+
   <Target Name="PostPack" AfterTargets="Pack" Condition=" '$(APPVEYOR)' == '' ">
     <Exec Command="dotnet nuget push bin\**.nupkg  -s $(AppData)\..\Local\Temp\NuGetScratch" />
   </Target>
-
-  <ItemGroup>
-    <PackageReference Include="Zenseless.OpenTK" Version="0.1.66" />
-    <PackageReference Include="ImGui.NET" Version="1.89.4" />
-  </ItemGroup>
 
 </Project>
