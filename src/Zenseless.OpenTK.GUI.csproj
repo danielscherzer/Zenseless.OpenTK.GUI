@@ -37,7 +37,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Zenseless.OpenTK" Version="0.1.69" />
+    <PackageReference Include="Zenseless.OpenTK" Version="0.1.70" />
     <PackageReference Include="Zenseless.Resources" Version="0.2.14" />
     <PackageReference Include="ImGui.NET" Version="1.89.5" />
   </ItemGroup>

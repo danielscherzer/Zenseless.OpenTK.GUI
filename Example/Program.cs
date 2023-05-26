@@ -2,13 +2,12 @@
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using Zenseless.OpenTK;
 using Zenseless.OpenTK.GUI;
-using Zenseless.Resources;
 
-GameWindow window = new(GameWindowSettings.Default, new NativeWindowSettings { Profile = ContextProfile.Compatability });
+GameWindow window = new(GameWindowSettings.Default, ImmediateMode.NativeWindowSettings);
 
 using ImGuiFacade gui = new(window);
 gui.LoadFontDroidSans(24);
