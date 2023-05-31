@@ -17,7 +17,7 @@ window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 string input = "hallo";
 Vector3 color3 = new(1f, 1f, 1f);
 Vector4 color4 = new(1f, 1f, 1f, 1f);
-var triangles = Helper.CreateRandomTria(100);
+var triangles = Helper.CreateRandomTriangles(100);
 GL.EnableVertexAttribArray(0);
 
 window.RenderFrame += args =>

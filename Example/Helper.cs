@@ -6,7 +6,7 @@ namespace Example;
 
 internal static class Helper
 {
-	public static Vector2[] CreateRandomTria(int count)
+	public static Vector2[] CreateRandomTriangles(int count)
 	{
 		Vector2[] points = new Vector2[count * 3];
 		const float size = 0.02f;
@@ -18,7 +18,6 @@ internal static class Helper
 			points[i] = v;
 			points[i + 1] = v + new Vector2(size, 0f);
 			points[i + 2] = v + new Vector2(size);
-			//points[i + 3] = v + new Vector2(0f, size);
 		}
 		return points;
 	}
