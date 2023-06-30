@@ -3,6 +3,8 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Zenseless.OpenTK.GUI;
 
@@ -20,26 +22,24 @@ public class ImGuiInput
 		ImGuiHelper.AssureContextCreated();
 
 		ImGuiIOPtr io = ImGui.GetIO();
-		io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab;
+		var imguiKeys = Enum.GetNames<ImGuiKey>().Select(name => name.ToLowerInvariant()).Zip(Enum.GetValues<ImGuiKey>(), (Name, Key) => (Name, Key)).ToList();
+		var opentkKeys = Enum.GetNames<Keys>().Select(name => name.ToLowerInvariant()).Zip(Enum.GetValues<Keys>(), (Name, Key) => (Name, Key)).ToList();
+		// set exact case-invariant name matches
+		foreach (var imgui in imguiKeys)
+		{
+			foreach (var (Name, Key) in opentkKeys.Where(d => d.Name == imgui.Name))
+			{
+				io.KeyMap[(int)imgui.Key] = (int)Key;
+			}
+		}
 		io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left;
 		io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right;
 		io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up;
 		io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down;
-		io.KeyMap[(int)ImGuiKey.PageUp] = (int)Keys.PageUp;
-		io.KeyMap[(int)ImGuiKey.PageDown] = (int)Keys.PageDown;
-		io.KeyMap[(int)ImGuiKey.Home] = (int)Keys.Home;
-		io.KeyMap[(int)ImGuiKey.End] = (int)Keys.End;
-		io.KeyMap[(int)ImGuiKey.Delete] = (int)Keys.Delete;
-		io.KeyMap[(int)ImGuiKey.Backspace] = (int)Keys.Backspace;
-		io.KeyMap[(int)ImGuiKey.Enter] = (int)Keys.Enter;
-		io.KeyMap[(int)ImGuiKey.Escape] = (int)Keys.Escape;
-		io.KeyMap[(int)ImGuiKey.A] = (int)Keys.A;
-		io.KeyMap[(int)ImGuiKey.C] = (int)Keys.C;
-		io.KeyMap[(int)ImGuiKey.V] = (int)Keys.V;
-		io.KeyMap[(int)ImGuiKey.X] = (int)Keys.X;
-		io.KeyMap[(int)ImGuiKey.Y] = (int)Keys.Y;
-		io.KeyMap[(int)ImGuiKey.Z] = (int)Keys.Z;
-
+		for(int i =  0; i < 10; i++)
+		{
+			io.KeyMap[(int)ImGuiKey._0 + i] = (int)Keys.D0 + i;
+		}
 		io.DeltaTime = 1f / 60f;
 
 		window.TextInput += args => PressChar((char)args.Unicode);

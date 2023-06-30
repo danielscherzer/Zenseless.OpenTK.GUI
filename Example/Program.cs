@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
 using Zenseless.OpenTK;
 using Zenseless.OpenTK.GUI;
 
@@ -33,20 +34,33 @@ window.RenderFrame += args =>
 {
 	ImGui.NewFrame(); // call each frame before any ImGui.* calls
 
-	ImGuiIOPtr io = ImGui.GetIO();
-	ImGui.SliderFloat("Font scale", ref io.FontGlobalScale, 0.5f, 4f, "%.1f");
-	ImGui.InputText("text", ref input, 255);
-	ImGuiHelper.ColorEdit(nameof(color3), ref color3);
-	ImGuiHelper.SliderFloat(nameof(color3), ref color3);
-	ImGuiHelper.ColorEdit(nameof(color4), ref color4);
-	ImGuiHelper.SliderFloat(nameof(color4), ref color4);
-	for (int i = 0; i < 10; ++i) ImGui.Button("testbutton" + i);
 	ImGui.ShowDemoWindow();
 
 	ImGui.Begin("Style");
 	ImGui.ShowStyleEditor();
 	ImGui.End();
 
+	ImGui.Begin("user");
+	ImGuiIOPtr io = ImGui.GetIO();
+	foreach (var key in Enum.GetValues<ImGuiKey>())
+	{
+		if (ImGui.IsKeyDown(key))
+		{
+			ImGui.SameLine();
+			ImGui.Text(Enum.GetName(key));
+		}
+	}
+	ImGui.SliderFloat("Font scale", ref io.FontGlobalScale, 0.5f, 4f, "%.1f");
+	ImGui.InputText("text", ref input, 255);
+	ImGuiHelper.ColorEdit(nameof(color3), ref color3);
+	ImGuiHelper.SliderFloat(nameof(color3), ref color3);
+	ImGuiHelper.ColorEdit(nameof(color4), ref color4);
+	ImGuiHelper.SliderFloat(nameof(color4), ref color4);
+	for (int i = 0; i < 10; ++i)
+	{
+		ImGui.Button("testbutton" + i);
+	}
+	ImGui.End();
 	gui.Render(window.Size);
 };
 window.RenderFrame += _ => window.SwapBuffers();

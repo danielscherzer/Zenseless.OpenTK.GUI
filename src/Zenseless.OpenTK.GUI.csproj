@@ -38,7 +38,7 @@
   
   <ItemGroup>
     <PackageReference Include="Zenseless.OpenTK" Version="0.1.73" />
-    <PackageReference Include="ImGui.NET" Version="1.89.5" />
+    <PackageReference Include="ImGui.NET" Version="1.89.6" />
   </ItemGroup>
 
   <Target Name="PostPack" AfterTargets="Pack" Condition=" '$(APPVEYOR)' == '' ">
