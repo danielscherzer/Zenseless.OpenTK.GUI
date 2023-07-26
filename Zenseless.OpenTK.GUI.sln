@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zenseless.OpenTK.GUI", "src\Zenseless.OpenTK.GUI.csproj", "{722BC859-12A3-4CF0-96C1-B49F57D766FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "Example\Example.csproj", "{210723C1-BC3D-4C52-90EE-CA272AB6CE13}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C188548B-229A-4D73-B9DF-EA3802354800}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
@@ -15,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
 		readme.md = readme.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "Example\Example.csproj", "{60089203-9491-4C02-B566-3A9C10FC9DAA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleIM", "ExampleIM\ExampleIM.csproj", "{0B999E34-60F9-4969-8C19-5963077B2C95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +28,14 @@ Global
 		{722BC859-12A3-4CF0-96C1-B49F57D766FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{722BC859-12A3-4CF0-96C1-B49F57D766FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{722BC859-12A3-4CF0-96C1-B49F57D766FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{210723C1-BC3D-4C52-90EE-CA272AB6CE13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{210723C1-BC3D-4C52-90EE-CA272AB6CE13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{210723C1-BC3D-4C52-90EE-CA272AB6CE13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{210723C1-BC3D-4C52-90EE-CA272AB6CE13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60089203-9491-4C02-B566-3A9C10FC9DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60089203-9491-4C02-B566-3A9C10FC9DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60089203-9491-4C02-B566-3A9C10FC9DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60089203-9491-4C02-B566-3A9C10FC9DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B999E34-60F9-4969-8C19-5963077B2C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B999E34-60F9-4969-8C19-5963077B2C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B999E34-60F9-4969-8C19-5963077B2C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B999E34-60F9-4969-8C19-5963077B2C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

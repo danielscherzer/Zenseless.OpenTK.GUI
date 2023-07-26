@@ -2,18 +2,14 @@
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using Zenseless.OpenTK;
 using Zenseless.OpenTK.GUI;
-using Buffer = Zenseless.OpenTK.Buffer;
 
-using GameWindow window = new(GameWindowSettings.Default, new NativeWindowSettings() 
-{ APIVersion = new Version(4, 5), Flags = ContextFlags.Debug });
-DebugOutputGL debugOutput = new();
-debugOutput.DebugEvent += (_, args) => Console.WriteLine(args.Message);
+using GameWindow window = new(GameWindowSettings.Default, ImmediateMode.NativeWindowSettings);
+
 using ImGuiFacade gui = new(window);
 gui.LoadFontDroidSans(24);
 
@@ -23,17 +19,14 @@ string input = "hallo";
 Vector3 color3 = new(1f, 1f, 1f);
 Vector4 color4 = new(1f, 1f, 1f, 1f);
 var triangles = Helper.CreateRandomTriangles(100);
-using Buffer buffer = new();
-buffer.Set(triangles);
-using VertexArray vertexArray = new();
-vertexArray.BindAttribute(0, buffer, 2, Vector2.SizeInBytes, VertexAttribType.Float);
+GL.EnableVertexAttribArray(0);
 
 window.RenderFrame += args =>
 {
 	GL.ClearColor(new Color4(0, 32, 48, 255));
 	GL.Clear(ClearBufferMask.ColorBufferBit);
 
-	vertexArray.Bind();
+	GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, triangles);
 	GL.DrawArrays(PrimitiveType.Triangles, 0, triangles.Length); // draw with vertex array data
 };
 
@@ -49,7 +42,21 @@ window.RenderFrame += args =>
 
 	ImGui.Begin("user");
 	ImGuiIOPtr io = ImGui.GetIO();
-
+	foreach (var key in Enum.GetValues<ImGuiKey>())
+	{
+		try
+		{
+			if (ImGui.IsKeyDown(key))
+			{
+				ImGui.SameLine();
+				ImGui.Text(Enum.GetName(key));
+			}
+		}
+		catch(AccessViolationException ex)
+		{
+			ImGui.Text(ex.Message);
+		}
+	}
 	ImGui.SliderFloat("Font scale", ref io.FontGlobalScale, 0.5f, 4f, "%.1f");
 	ImGui.InputText("text", ref input, 255);
 	ImGuiHelper.ColorEdit(nameof(color3), ref color3);
