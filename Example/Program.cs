@@ -61,7 +61,7 @@ window.RenderFrame += args =>
 		ImGui.Button("testbutton" + i);
 	}
 	ImGui.End();
-	gui.Render(window.Size);
+	gui.Render(window.ClientSize);
 };
 window.RenderFrame += _ => window.SwapBuffers();
 window.Resize += (window) => GL.Viewport(0, 0, window.Width, window.Height);
