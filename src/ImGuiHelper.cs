@@ -20,6 +20,17 @@ public class ImGuiHelper
 	}
 
 	/// <summary>
+	/// Checks if the mouse or keyboard are currently captured by the GUI
+	/// </summary>
+	/// <returns></returns>
+	public static bool HasGuiFocus()
+	{
+		if (IntPtr.Zero == ImGui.GetCurrentContext()) return false; // no gui
+		var io = ImGui.GetIO();
+		return io.WantCaptureKeyboard || io.WantCaptureMouse;
+	}
+
+	/// <summary>
 	/// Create a SliderFloat2 with <see cref="Vector2"/> input.
 	/// </summary>
 	/// <param name="label">The label of the slider</param>
