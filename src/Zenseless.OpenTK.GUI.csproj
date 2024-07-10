@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <RootNamespace>Zenseless.OpenTK.GUI</RootNamespace>
     <Nullable>enable</Nullable>
     <PublishDocumentationFile>true</PublishDocumentationFile>
@@ -37,8 +37,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Zenseless.OpenTK" Version="0.1.81" />
-    <PackageReference Include="ImGui.NET" Version="1.89.9.2" />
+    <PackageReference Include="Zenseless.OpenTK" Version="0.1.83" />
+    <PackageReference Include="ImGui.NET" Version="1.90.9.1" />
   </ItemGroup>
 
   <Target Name="PostPack" AfterTargets="Pack" Condition=" '$(APPVEYOR)' == '' ">

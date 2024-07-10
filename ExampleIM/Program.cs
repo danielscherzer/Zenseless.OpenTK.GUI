@@ -4,7 +4,6 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using System;
 using Zenseless.OpenTK;
 using Zenseless.OpenTK.GUI;
 
@@ -41,22 +40,9 @@ window.RenderFrame += args =>
 	ImGui.End();
 
 	ImGui.Begin("user");
+	InputUI();
 	ImGuiIOPtr io = ImGui.GetIO();
-	foreach (var key in Enum.GetValues<ImGuiKey>())
-	{
-		try
-		{
-			if (ImGui.IsKeyDown(key))
-			{
-				ImGui.SameLine();
-				ImGui.Text(Enum.GetName(key));
-			}
-		}
-		catch(AccessViolationException ex)
-		{
-			ImGui.Text(ex.Message);
-		}
-	}
+
 	ImGui.SliderFloat("Font scale", ref io.FontGlobalScale, 0.5f, 4f, "%.1f");
 	ImGui.InputText("text", ref input, 255);
 	ImGuiHelper.ColorEdit(nameof(color3), ref color3);
@@ -74,3 +60,19 @@ window.RenderFrame += _ => window.SwapBuffers();
 window.Resize += (window) => GL.Viewport(0, 0, window.Width, window.Height);
 
 window.Run();
+
+static void InputUI()
+{
+	if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
+	{
+		ImGui.Text("Left Mouse down");
+	}
+	if (ImGui.IsMouseDown(ImGuiMouseButton.Right))
+	{
+		ImGui.Text("Right Mouse down");
+	}
+	var io = ImGui.GetIO();
+	io.FontGlobalScale += 0.1f * io.MouseWheel;
+
+	ImGui.Text($"{nameof(io.MousePos)}:{io.MousePos}");
+}

@@ -4,7 +4,6 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Zenseless.OpenTK.GUI;
 
@@ -22,6 +21,44 @@ public class ImGuiInput
 		ImGuiHelper.AssureContextCreated();
 
 		ImGuiIOPtr io = ImGui.GetIO();
+		io.DeltaTime = 1f / 60f;
+
+		window.TextInput += args => io.AddInputCharacter((uint)args.Unicode);
+		window.UpdateFrame += args => io.DeltaTime = (float)args.Time;
+		window.KeyDown += args => KeyEvent(args.Key, true);
+		window.KeyUp += args => KeyEvent(args.Key, false);
+		window.MouseDown += args => MouseEvent(args.Button, true);
+		window.MouseUp += args => MouseEvent(args.Button, false);
+		window.MouseMove += args => io.AddMousePosEvent(args.X, args.Y);
+		window.MouseWheel += args => io.AddMouseWheelEvent(args.OffsetX, args.OffsetY);
+	}
+
+	private static void MouseEvent(MouseButton button, bool down)
+	{
+		ImGuiIOPtr io = ImGui.GetIO();
+		io.AddMouseButtonEvent((int) button, down);
+	}
+
+	private static void KeyEvent(Keys key, bool down)
+	{
+		void KeyEvent(ImGuiKey imGuiKey)
+		{
+			ImGuiIOPtr io = ImGui.GetIO();
+			io.AddKeyEvent(imGuiKey, down);
+		}
+
+		if(keyMapping.TryGetValue(key, out var value))
+		{
+			KeyEvent(value);
+		}
+		//TODO: Report unknown key events
+	}
+
+	private static readonly Dictionary<Keys, ImGuiKey> keyMapping = CreateKeyMapping();
+
+	private static Dictionary<Keys, ImGuiKey> CreateKeyMapping()
+	{
+		Dictionary<Keys, ImGuiKey> mapping = [];
 		var imguiKeys = Enum.GetNames<ImGuiKey>().Select(name => name.ToLowerInvariant()).Zip(Enum.GetValues<ImGuiKey>(), (Name, Key) => (Name, Key)).ToList();
 		var opentkKeys = Enum.GetNames<Keys>().Select(name => name.ToLowerInvariant()).Zip(Enum.GetValues<Keys>(), (Name, Key) => (Name, Key)).ToList();
 		// set exact case-invariant name matches
@@ -29,63 +66,17 @@ public class ImGuiInput
 		{
 			foreach (var (Name, Key) in opentkKeys.Where(d => d.Name == imgui.Name))
 			{
-				io.KeyMap[(int)imgui.Key] = (int)Key;
+				mapping[Key] = imgui.Key;
 			}
 		}
-		io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left;
-		io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right;
-		io.KeyMap[(int)ImGuiKey.UpArrow] = (int)Keys.Up;
-		io.KeyMap[(int)ImGuiKey.DownArrow] = (int)Keys.Down;
-		for(int i =  0; i < 10; i++)
+		mapping[Keys.Left] = ImGuiKey.LeftArrow;
+		mapping[Keys.Right] = ImGuiKey.RightArrow;
+		mapping[Keys.Up] = ImGuiKey.UpArrow;
+		mapping[Keys.Down] = ImGuiKey.DownArrow;
+		for (int i = 0; i < 10; i++)
 		{
-			io.KeyMap[(int)ImGuiKey._0 + i] = (int)Keys.D0 + i;
+			mapping[Keys.D0 + i] = ImGuiKey._0 + i;
 		}
-		io.DeltaTime = 1f / 60f;
-
-		window.TextInput += args => PressChar((char)args.Unicode);
-		window.UpdateFrame += args => Update(window.MouseState, window.KeyboardState, (float)args.Time);
+		return mapping;
 	}
-
-	/// <summary>
-	/// Update the ImGui input state
-	/// </summary>
-	/// <param name="mouseState">The <see cref="MouseState"/>.</param>
-	/// <param name="keyboardState">The <see cref="KeyboardState"/>.</param>
-	/// <param name="deltaTime">Delta time in seconds.</param>
-	private void Update(MouseState mouseState, KeyboardState keyboardState, float deltaTime)
-	{
-		ImGuiIOPtr io = ImGui.GetIO();
-		io.DeltaTime = deltaTime;
-
-		io.MouseDown[0] = mouseState[MouseButton.Left];
-		io.MouseDown[1] = mouseState[MouseButton.Right];
-		io.MouseDown[2] = mouseState[MouseButton.Middle];
-		io.MouseWheel = mouseState.ScrollDelta.Y;
-		io.MouseWheelH = mouseState.ScrollDelta.X;
-		io.MousePos = mouseState.Position.ToSystemNumerics();
-
-		foreach (Keys key in Enum.GetValues(typeof(Keys)))
-		{
-			if (key == Keys.Unknown)
-			{
-				continue;
-			}
-			io.KeysDown[(int)key] = keyboardState.IsKeyDown(key);
-		}
-
-		foreach (var c in _pressedChars)
-		{
-			io.AddInputCharacter(c);
-		}
-		_pressedChars.Clear();
-
-		io.KeyCtrl = keyboardState.IsKeyDown(Keys.LeftControl) || keyboardState.IsKeyDown(Keys.RightControl);
-		io.KeyAlt = keyboardState.IsKeyDown(Keys.LeftAlt) || keyboardState.IsKeyDown(Keys.RightAlt);
-		io.KeyShift = keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift);
-		io.KeySuper = keyboardState.IsKeyDown(Keys.LeftSuper) || keyboardState.IsKeyDown(Keys.RightSuper);
-	}
-
-	private readonly List<char> _pressedChars = new();
-
-	private void PressChar(char keyChar) => _pressedChars.Add(keyChar);
 }
