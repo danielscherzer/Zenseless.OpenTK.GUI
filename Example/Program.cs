@@ -10,12 +10,11 @@ using Zenseless.OpenTK;
 using Zenseless.OpenTK.GUI;
 using Buffer = Zenseless.OpenTK.Buffer;
 
-using GameWindow window = new(GameWindowSettings.Default, new NativeWindowSettings() 
+using GuiWindow window = new(GameWindowSettings.Default, new NativeWindowSettings() 
 { APIVersion = new Version(4, 5), Flags = ContextFlags.Debug });
 DebugOutputGL debugOutput = new();
 debugOutput.DebugEvent += (_, args) => Console.WriteLine(args.Message);
-using ImGuiFacade gui = new(window);
-gui.LoadFontDroidSans(24);
+window.Gui.LoadFontDroidSans(24);
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 
@@ -39,8 +38,6 @@ window.RenderFrame += args =>
 
 window.RenderFrame += args =>
 {
-	ImGui.NewFrame(); // call each frame before any ImGui.* calls
-
 	ImGui.ShowDemoWindow();
 
 	ImGui.Begin("Style");
@@ -63,11 +60,7 @@ window.RenderFrame += args =>
 	{
 		ImGui.Button("testbutton" + i);
 	}
-
-	ImGui.End();
-	gui.Render(window.ClientSize);
 };
-window.RenderFrame += _ => window.SwapBuffers();
 window.Resize += (window) => GL.Viewport(0, 0, window.Width, window.Height);
 
 window.Run();
