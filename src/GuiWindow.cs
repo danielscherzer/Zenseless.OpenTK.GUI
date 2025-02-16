@@ -1,7 +1,7 @@
 ﻿using ImGuiNET;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
 
 namespace Zenseless.OpenTK.GUI;
 
@@ -28,6 +28,16 @@ public class GuiWindow : GameWindow
 	/// Access to the <see cref="ImGuiFacade"/>
 	/// </summary>
 	public ImGuiFacade Gui => gui;
+
+	/// <summary>
+	/// Returns <c>true</c> if keyboard or mouse focus is on any ImGui element
+	/// </summary>
+	/// <returns></returns>
+	public static bool HasFocus()
+	{
+		var io = ImGui.GetIO();
+		return io.WantCaptureKeyboard || io.WantCaptureMouse;
+	}
 
 	/// <summary>
 	/// Run when the window is ready to update. This is called before <see cref="OnRenderFrame(FrameEventArgs)"/>.
