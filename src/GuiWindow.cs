@@ -33,7 +33,7 @@ public class GuiWindow : GameWindow
 	/// Returns <c>true</c> if keyboard or mouse focus is on any ImGui element
 	/// </summary>
 	/// <returns></returns>
-	public static bool HasFocus()
+	public static bool HasGuiFocus()
 	{
 		var io = ImGui.GetIO();
 		return io.WantCaptureKeyboard || io.WantCaptureMouse;
