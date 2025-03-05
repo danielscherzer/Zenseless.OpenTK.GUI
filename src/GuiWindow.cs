@@ -56,7 +56,6 @@ public class GuiWindow : GameWindow
 	protected override void OnRenderFrame(FrameEventArgs args)
 	{
 		base.OnRenderFrame(args);
-		ImGui.End();
 		gui.Render(ClientSize);
 		SwapBuffers();
 	}

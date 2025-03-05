@@ -60,6 +60,7 @@ window.RenderFrame += args =>
 	{
 		ImGui.Button("testbutton" + i);
 	}
+	ImGui.End();
 };
 window.Resize += (window) => GL.Viewport(0, 0, window.Width, window.Height);
 
