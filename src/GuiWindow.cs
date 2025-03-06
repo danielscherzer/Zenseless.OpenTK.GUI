@@ -11,7 +11,6 @@ namespace Zenseless.OpenTK.GUI;
 /// <para>
 /// Use GameWindowSettings.Default and NativeWindowSettings.Default to get some sensible default attributes.
 /// </para>
-/// </remarks>
 public class GuiWindow : GameWindow
 {
 	/// <summary>
@@ -60,5 +59,5 @@ public class GuiWindow : GameWindow
 		SwapBuffers();
 	}
 
-	private ImGuiFacade gui;
+	private readonly ImGuiFacade gui;
 }
