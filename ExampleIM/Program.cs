@@ -6,11 +6,14 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Zenseless.OpenTK;
 using Zenseless.OpenTK.GUI;
+using Zenseless.OpenTK.GUI.PropertyGUI;
 
 using GameWindow window = new(GameWindowSettings.Default, ImmediateMode.NativeWindowSettings);
-
+window.WindowState = OpenTK.Windowing.Common.WindowState.Maximized;
 using ImGuiFacade gui = new(window);
 gui.LoadFontDroidSans(24);
+MyPropertyControls myPropertyControls = new();
+var controls = PropertyControls.CreateControls(myPropertyControls);
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 
@@ -27,10 +30,7 @@ window.RenderFrame += args =>
 
 	GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, triangles);
 	GL.DrawArrays(PrimitiveType.Triangles, 0, triangles.Length); // draw with vertex array data
-};
 
-window.RenderFrame += args =>
-{
 	ImGui.NewFrame(); // call each frame before any ImGui.* calls
 
 	ImGui.ShowDemoWindow();
@@ -40,19 +40,24 @@ window.RenderFrame += args =>
 	ImGui.End();
 
 	ImGui.Begin("user");
-	InputUI();
-	ImGuiIOPtr io = ImGui.GetIO();
 
+	controls.ForEach(control => control.Draw());
+
+	ImGuiIOPtr io = ImGui.GetIO();
 	ImGui.SliderFloat("Font scale", ref io.FontGlobalScale, 0.5f, 4f, "%.1f");
 	ImGui.InputText("text", ref input, 255);
 	ImGuiHelper.ColorEdit(nameof(color3), ref color3);
 	ImGuiHelper.SliderFloat(nameof(color3), ref color3);
 	ImGuiHelper.ColorEdit(nameof(color4), ref color4);
 	ImGuiHelper.SliderFloat(nameof(color4), ref color4);
-	for (int i = 0; i < 10; ++i)
+
+	for (int i = 0; i < 3; ++i)
 	{
 		ImGui.Button("testbutton" + i);
 	}
+
+	InputUI();
+
 	ImGui.End();
 	gui.Render(window.ClientSize);
 };
