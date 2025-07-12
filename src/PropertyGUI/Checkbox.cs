@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Zenseless.OpenTK.GUI.PropertyGUI;
@@ -18,10 +19,14 @@ public class Checkbox(object instance, PropertyInfo propertyInfo) : Control(inst
 		switch (Value)
 		{
 			case bool value:
-				ImGui.Checkbox(PropertyInfo.Name, ref value);
-				SetValue(value);
+				if(ImGui.Checkbox(PropertyInfo.Name, ref value))
+				{
+					SetValue(value);
+				}
 				break;
-			default: break;
+			default:
+				Trace.TraceError($"No checkbox for {PropertyInfo.Name} with value of type {Value?.GetType().Name ?? "null"}");
+				break;
 		}
 	}
 }

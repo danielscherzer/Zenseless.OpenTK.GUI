@@ -1,5 +1,9 @@
 ﻿using ImGuiNET;
+using OpenTK.Mathematics;
+using System;
+using System.Diagnostics;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Zenseless.OpenTK.GUI.PropertyGUI;
 
@@ -25,14 +29,47 @@ public class Slider(object instance, PropertyInfo propertyInfo, SliderAttribute 
 		switch (Value)
 		{
 			case int value:
-				ImGui.SliderInt(PropertyInfo.Name, ref value, (int)attribute.Min, (int)attribute.Max);
-				SetValue(value);
+				if(ImGui.SliderInt(PropertyInfo.Name, ref value, (int)attribute.Min, (int)attribute.Max))
+				{
+					SetValue(value);
+				}
 				break;
 			case float value:
-				ImGui.SliderFloat(PropertyInfo.Name, ref value, attribute.Min, attribute.Max);
-				SetValue(value);
+				if(ImGui.SliderFloat(PropertyInfo.Name, ref value, attribute.Min, attribute.Max))
+				{
+					SetValue(value);
+				}
 				break;
-			default: break;
+			case Vector2 value:
+				{
+					System.Numerics.Vector2 v = value.ToSystemNumerics();
+					if (ImGui.SliderFloat2(PropertyInfo.Name, ref v, attribute.Min, attribute.Max))
+					{
+						SetValue(v.ToOpenTK());
+					}
+				}
+				break;
+			case Vector3 value:
+				{
+					System.Numerics.Vector3 v = value.ToSystemNumerics();
+					if (ImGui.SliderFloat3(PropertyInfo.Name, ref v, attribute.Min, attribute.Max))
+					{
+						SetValue(v.ToOpenTK());
+					}
+				}
+				break;
+			case Vector4 value:
+				{
+					System.Numerics.Vector4 v = value.ToSystemNumerics();
+					if (ImGui.SliderFloat4(PropertyInfo.Name, ref v, attribute.Min, attribute.Max))
+					{
+						SetValue(v.ToOpenTK());
+					}
+				}
+				break;
+			default:
+				Trace.TraceError($"No slider for {PropertyInfo.Name} with value of type {Value?.GetType().Name ?? "null"}");
+				break;
 		}
 	}
 }
