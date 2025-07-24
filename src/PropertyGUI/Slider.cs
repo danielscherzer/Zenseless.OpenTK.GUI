@@ -1,9 +1,7 @@
 ﻿using ImGuiNET;
 using OpenTK.Mathematics;
-using System;
 using System.Diagnostics;
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace Zenseless.OpenTK.GUI.PropertyGUI;
 
@@ -13,11 +11,20 @@ namespace Zenseless.OpenTK.GUI.PropertyGUI;
 /// <remarks>The <see cref="Slider"/> class provides functionality to render a slider control using ImGui,
 /// allowing users to interactively adjust integer or floating-point values. The control is bound to a property of an
 /// object instance and respects the constraints defined by the associated <see cref="SliderAttribute"/>.</remarks>
-/// <param name="instance">An object instance that has the property refered to in <paramref name="propertyInfo"/></param>
-/// <param name="propertyInfo">The <see cref="PropertyInfo"/>.</param>
-/// <param name="attribute">The <see cref="SliderAttribute"/></param>
-public class Slider(object instance, PropertyInfo propertyInfo, SliderAttribute attribute): Control(instance, propertyInfo)
+/// <param name="property">The property the control should display</param>
+/// <param name="min">Slider minimal value</param>
+/// <param name="max">Slider maximal value</param>
+public class Slider(Property property, float min, float max): Control(property)
 {
+	/// <summary>
+	/// Slider minimal value
+	/// </summary>
+	public float Min { get; set; } = min;
+	/// <summary>
+	/// Slider maximal value
+	/// </summary>
+	public float Max { get; set; } = max;
+
 	/// <summary>
 	/// Renders a UI control for editing the value of the associated property.
 	/// </summary>
@@ -29,13 +36,13 @@ public class Slider(object instance, PropertyInfo propertyInfo, SliderAttribute 
 		switch (Value)
 		{
 			case int value:
-				if(ImGui.SliderInt(PropertyInfo.Name, ref value, (int)attribute.Min, (int)attribute.Max))
+				if(ImGui.SliderInt(Label, ref value, (int)Min, (int)Max))
 				{
 					SetValue(value);
 				}
 				break;
 			case float value:
-				if(ImGui.SliderFloat(PropertyInfo.Name, ref value, attribute.Min, attribute.Max))
+				if(ImGui.SliderFloat(Label, ref value, Min, Max))
 				{
 					SetValue(value);
 				}
@@ -43,7 +50,7 @@ public class Slider(object instance, PropertyInfo propertyInfo, SliderAttribute 
 			case Vector2 value:
 				{
 					System.Numerics.Vector2 v = value.ToSystemNumerics();
-					if (ImGui.SliderFloat2(PropertyInfo.Name, ref v, attribute.Min, attribute.Max))
+					if (ImGui.SliderFloat2(Label, ref v, Min, Max))
 					{
 						SetValue(v.ToOpenTK());
 					}
@@ -52,7 +59,7 @@ public class Slider(object instance, PropertyInfo propertyInfo, SliderAttribute 
 			case Vector3 value:
 				{
 					System.Numerics.Vector3 v = value.ToSystemNumerics();
-					if (ImGui.SliderFloat3(PropertyInfo.Name, ref v, attribute.Min, attribute.Max))
+					if (ImGui.SliderFloat3(Label, ref v, Min, Max))
 					{
 						SetValue(v.ToOpenTK());
 					}
@@ -61,14 +68,14 @@ public class Slider(object instance, PropertyInfo propertyInfo, SliderAttribute 
 			case Vector4 value:
 				{
 					System.Numerics.Vector4 v = value.ToSystemNumerics();
-					if (ImGui.SliderFloat4(PropertyInfo.Name, ref v, attribute.Min, attribute.Max))
+					if (ImGui.SliderFloat4(Label, ref v, Min, Max))
 					{
 						SetValue(v.ToOpenTK());
 					}
 				}
 				break;
 			default:
-				Trace.TraceError($"No slider for {PropertyInfo.Name} with value of type {Value?.GetType().Name ?? "null"}");
+				Trace.TraceError($"No slider for {Property.PropertyInfo.Name} with value of type {Value?.GetType().Name ?? "null"}");
 				break;
 		}
 	}

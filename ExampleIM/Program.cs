@@ -13,7 +13,9 @@ window.WindowState = OpenTK.Windowing.Common.WindowState.Maximized;
 using ImGuiFacade gui = new(window);
 gui.LoadFontDroidSans(24);
 MyPropertyControls myPropertyControls = new();
-var controls = PropertyControls.CreateControls(myPropertyControls);
+var controls = PropertyControls.CreateControlsFromAttributes(myPropertyControls);
+controls[1].Label = "Testname"; // change label of control
+controls.Add(new Slider(Property.FromExpression(() => myPropertyControls.Value4), 0f, 1f));
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 

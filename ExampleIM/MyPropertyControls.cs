@@ -7,4 +7,6 @@ class MyPropertyControls
 	[Bool] public bool CollisionResponse { get; set; } = true;
 	[Slider(0.01f, 0.5f, -1)] public float ParticleSize { get; set; } = 0.1f;
 	[Slider(0f, 1f)] public Vector2 Value2 { get; set; } = Vector2.UnitX;
+	[Slider(0f, 1f)] public Vector3 Value3 { get; set; } = Vector3.One;
+	public Vector4 Value4 { get; set; } = Vector4.UnitZ;
 };

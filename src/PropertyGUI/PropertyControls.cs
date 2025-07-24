@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Zenseless.OpenTK.GUI.PropertyGUI;
@@ -8,7 +10,7 @@ namespace Zenseless.OpenTK.GUI.PropertyGUI;
 /// <summary>
 /// Factory class for generating Controls based on properties of an object instance.
 /// </summary>
-public static partial class PropertyControls
+public static class PropertyControls
 {
 	/// <summary>
 	/// Creates UI controls based on the given object instances for all properties marked with <see cref="ControlAttribute"/>.
@@ -16,7 +18,7 @@ public static partial class PropertyControls
 	/// <param name="instances">Object instances to search for <see cref="ControlAttribute"/></param>
 	/// <returns>A <see cref="List{Control}"/></returns>
 	/// <exception cref="ApplicationException"></exception>
-	public static List<Control> CreateControls(params object[] instances)
+	public static List<Control> CreateControlsFromAttributes(params object[] instances)
 	{
 		static T GetAttribut<T>(PropertyInfo propertyInfo) where T : Attribute => propertyInfo.GetCustomAttribute<T>() ?? throw new ApplicationException($"Property {propertyInfo.Name} is marked with {typeof(T).Name} but no attribute found.");
 
@@ -30,12 +32,12 @@ public static partial class PropertyControls
 				if (Attribute.IsDefined(property, typeof(SliderAttribute)))
 				{
 					var sliderAttribute = GetAttribut<SliderAttribute>(property);
-					controls.Add(new Slider(instance, property, sliderAttribute));
+					controls.Add(new Slider(new Property(instance, property), sliderAttribute.Min, sliderAttribute.Max));
 				}
 				else if (Attribute.IsDefined(property, typeof(BoolAttribute)))
 				{
 					var boolAttribute = GetAttribut<BoolAttribute>(property);
-					controls.Add(new Checkbox(instance, property));
+					controls.Add(new Checkbox(new Property(instance, property)));
 				}
 			}
 		}
