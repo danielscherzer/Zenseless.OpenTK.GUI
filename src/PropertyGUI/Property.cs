@@ -35,6 +35,30 @@ public readonly record struct Property(object Instance, PropertyInfo PropertyInf
 		throw new InvalidOperationException("Please provide a valid property expression, like '() => instance.PropertyName'.");
 	}
 
+	/// <summary>
+	/// Sets the value of the property represented by this instance.
+	/// </summary>
+	/// <remarks>This method validates that the provided <paramref name="value"/> is compatible with the property's
+	/// type before attempting to set it. If the validation fails, an <see cref="InvalidCastException"/> is thrown.</remarks>
+	/// <param name="value">The value to assign to the property. The type of the value must be compatible with the property's type.</param>
+	/// <exception cref="InvalidCastException">Thrown if the type of <paramref name="value"/> is not assignable to the property's type.</exception>
+	public void SetValue(object? value)
+	{
+		if (PropertyInfo.PropertyType.IsAssignableFrom(value?.GetType() ?? typeof(object)))
+		{
+			PropertyInfo.SetValue(Instance, value);
+		}
+		else
+		{
+			throw new InvalidCastException($"Cannot set property {PropertyInfo.Name} to value of type {value?.GetType().Name ?? "null"}");
+		}
+	}
+
+	/// <summary>
+	/// Gets the value of the property represented by this instance.
+	/// </summary>
+	public object? Value => PropertyInfo.GetValue(Instance);
+
 	private static object? Evaluate(Expression e)
 	{
 		switch (e.NodeType)

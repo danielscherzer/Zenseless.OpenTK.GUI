@@ -12,10 +12,11 @@ using GameWindow window = new(GameWindowSettings.Default, ImmediateMode.NativeWi
 window.WindowState = OpenTK.Windowing.Common.WindowState.Maximized;
 using ImGuiFacade gui = new(window);
 gui.LoadFontDroidSans(24);
-MyPropertyControls myPropertyControls = new();
-var controls = PropertyControls.CreateControlsFromAttributes(myPropertyControls);
+SomeData data = new();
+var controls = PropertyControls.CreateControlsFromAttributes(data);
 controls[1].Label = "Testname"; // change label of control
-controls.Add(new Slider(Property.FromExpression(() => myPropertyControls.Value4), 0f, 1f));
+controls.Add(new Slider(Property.FromExpression(() => data.Value4), 0f, 1f));
+//controls.RemoveAll(c => c.Property == Property.FromExpression(() => data.Value4));
 
 window.KeyDown += args => { if (Keys.Escape == args.Key) window.Close(); };
 
@@ -42,7 +43,9 @@ window.RenderFrame += args =>
 	ImGui.End();
 
 	ImGui.Begin("user");
-
+	ImGuiProperty.CheckBox("Collision response", Property.FromExpression(() => data.CollisionResponse));
+	ImGuiProperty.Slider(() => data.Value5, 0f, 1f);
+	ImGuiProperty.Control(() => data.Value7, property => ImGui.DragFloat(property.Label, ref property.Value));
 	controls.ForEach(control => control.Draw());
 
 	ImGuiIOPtr io = ImGui.GetIO();

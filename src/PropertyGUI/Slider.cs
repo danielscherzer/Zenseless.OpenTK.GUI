@@ -1,7 +1,6 @@
 ﻿using ImGuiNET;
 using OpenTK.Mathematics;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace Zenseless.OpenTK.GUI.PropertyGUI;
 

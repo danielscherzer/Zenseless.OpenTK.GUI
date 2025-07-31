@@ -35,10 +35,12 @@ public class ImGuiHelper
 	/// </summary>
 	/// <param name="label">The label of the slider</param>
 	/// <param name="value">The <see cref="Vector2"/> value to edit.</param>
-	public static void SliderFloat(string label, ref Vector2 value)
+	/// <param name="min">Slider minimal value</param>
+	/// <param name="max">Slider maximal value</param>
+	public static void SliderFloat(string label, ref Vector2 value, float min = -1f, float max = 1f)
 	{
 		System.Numerics.Vector2 sysV = value.ToSystemNumerics();
-		if (ImGui.SliderFloat2(label, ref sysV, -1f, 1f))
+		if (ImGui.SliderFloat2(label, ref sysV, min, max))
 		{
 			value = sysV.ToOpenTK();
 		}
@@ -49,10 +51,12 @@ public class ImGuiHelper
 	/// </summary>
 	/// <param name="label">The label of the slider</param>
 	/// <param name="value">The <see cref="Vector3"/> value to edit.</param>
-	public static void SliderFloat(string label, ref Vector3 value)
+	/// <param name="min">Slider minimal value</param>
+	/// <param name="max">Slider maximal value</param>
+	public static void SliderFloat(string label, ref Vector3 value, float min = -1f, float max = 1f)
 	{
 		System.Numerics.Vector3 sysV = value.ToSystemNumerics();
-		if (ImGui.SliderFloat3(label, ref sysV, -1f, 1f))
+		if (ImGui.SliderFloat3(label, ref sysV, min, max))
 		{
 			value = sysV.ToOpenTK();
 		}
@@ -63,10 +67,12 @@ public class ImGuiHelper
 	/// </summary>
 	/// <param name="label">The label of the slider</param>
 	/// <param name="value">The <see cref="Vector4"/> value to edit.</param>
-	public static void SliderFloat(string label, ref Vector4 value)
+	/// <param name="min">Slider minimal value</param>
+	/// <param name="max">Slider maximal value</param>
+	public static void SliderFloat(string label, ref Vector4 value, float min = -1f, float max = 1f)
 	{
 		System.Numerics.Vector4 sysV = value.ToSystemNumerics();
-		if (ImGui.SliderFloat4(label, ref sysV, -1f, 1f))
+		if (ImGui.SliderFloat4(label, ref sysV, min, max))
 		{
 			value = sysV.ToOpenTK();
 		}
