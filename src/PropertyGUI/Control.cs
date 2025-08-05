@@ -54,13 +54,6 @@ public class Control(Property property)
 	/// <exception cref="InvalidCastException">Thrown if the type of <paramref name="value"/> is not assignable to the property's type.</exception>
 	public void SetValue(object? value)
 	{
-		if (Property.PropertyInfo.PropertyType.IsAssignableFrom(value?.GetType() ?? typeof(object)))
-		{
-			Property.PropertyInfo.SetValue(Instance, value);
-		}
-		else
-		{
-			throw new InvalidCastException($"Cannot set property {Property.PropertyInfo.Name} to value of type {value?.GetType().Name ?? "null"}");
-		}
+		Property.SetValue(value);
 	}
 }
