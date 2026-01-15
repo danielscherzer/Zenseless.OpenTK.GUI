@@ -71,7 +71,7 @@ window.Resize += (window) => GL.Viewport(0, 0, window.Width, window.Height);
 
 window.Run();
 
-static void InputUI()
+void InputUI()
 {
 	if (ImGui.IsMouseDown(ImGuiMouseButton.Left))
 	{
@@ -82,7 +82,10 @@ static void InputUI()
 		ImGui.Text("Right Mouse down");
 	}
 	var io = ImGui.GetIO();
-	io.FontGlobalScale += 0.1f * io.MouseWheel;
+	if(window.IsAnyKeyDown)
+	{
+		io.FontGlobalScale += 0.1f * io.MouseWheel;
+	}
 
 	ImGui.Text($"{nameof(io.MousePos)}:{io.MousePos}");
 }
